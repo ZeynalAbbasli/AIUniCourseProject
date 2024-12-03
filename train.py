@@ -15,7 +15,7 @@ import tqdm
 
 import os
 
-save_model_path = './saved/'
+save_model_path = '/content/AIUniCourseProject/saved'
 pth_name = f"saved_model_{1}.pth"
 
 
@@ -86,7 +86,7 @@ def train(model, train_loader, val_loader, optimizer, loss_fn, n_epochs, device)
             images = images.to(device)  # Move the batch of images to the specified device
             labels = labels.to(device)  # Move the batch of labels to the specified device
 
-
+            optimizer.zero_grad()  # Reset the gradients of the optimizer
 
             # Forward pass
             outputs = model(images)
@@ -94,7 +94,7 @@ def train(model, train_loader, val_loader, optimizer, loss_fn, n_epochs, device)
             # Compute loss
             loss = loss_fn(outputs, labels)
             outputs = outputs.softmax(dim=1)
-            optimizer.zero_grad()  # Reset the gradients of the optimizer
+            
             # Backward pass
             loss.backward()
 
@@ -134,14 +134,14 @@ def main():
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
     ])
 
-    trAug = transforms.Compose([
-        transforms.RandomCrop(size=(224, 224)),
-        transforms.RandomRotation(degrees=(-90,90)),
-        transforms.RandomHorizontalFlip(0.5)
-    ])
+    # trAug = transforms.Compose([
+    #     transforms.RandomCrop(size=(224, 224)),
+    #     transforms.RandomRotation(degrees=(-90,90)),
+    #     transforms.RandomHorizontalFlip(0.5)
+    # ])
 
-    train_data = custom_dataset("train", transformsBasic=trBas, transformsAugment = trAug)
-    val_data = custom_dataset("valid", transformsBasic= trBas)
+    train_data = custom_dataset("train", transforms=trBas)
+    val_data = custom_dataset("valid", transforms=trBas)
 
     train_loader = DataLoader(
         train_data,
