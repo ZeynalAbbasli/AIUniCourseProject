@@ -23,7 +23,7 @@ pth_name = f"saved_model_{1}.pth"
 
 def val(model, data_val, loss_function, writer, epoch, device):
     f1score = 0
-    f1 = F1Score(num_classes=53, task = 'multiclass')
+    f1 = F1Score(num_classes=8, task = 'multiclass')
     data_iterator = enumerate(data_val)  # take batches
     f1_list = []
     f1t_list = []
