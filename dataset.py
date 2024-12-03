@@ -10,11 +10,11 @@ import random
 from pathlib import Path
 
 class custom_dataset(Dataset):
-    def __init__(self, mode = "train", root = './dataset/splitted/', transformsBasic = None):
+    def __init__(self, mode = "train", root = '/content/AIUniCourseProject/dataset/splitted', transforms = None):
         super().__init__()
         self.mode = mode
         self.root = root
-        self.transformsBasic = transformsBasic
+        self.transforms = transforms
         
         #select split
         self.folder = os.path.join(self.root, self.mode)
@@ -26,14 +26,14 @@ class custom_dataset(Dataset):
         #save class lists
         self.class_list = os.listdir(self.folder)
         self.class_list.sort()
-        random.seed(10)
+        # random.seed(10)
         for class_id in range(len(self.class_list)):
-            count = 0
-            llst = []
+            # count = 0
+            # llst = []
             for image in os.listdir(os.path.join(self.folder, self.class_list[class_id])):
-                count += 1
+                # count += 1
                 self.image_list.append(os.path.join(self.folder, self.class_list[class_id], image))
-                llst.append(os.path.join(self.folder, self.class_list[class_id], image))
+                # llst.append(os.path.join(self.folder, self.class_list[class_id], image))
                 # self.image_list.append((os.path.join(self.folder, self.class_list[class_id], image), 'none'))
                 # llst.append((os.path.join(self.folder, self.class_list[class_id], image), 'none'))
                 label = np.zeros(len(self.class_list))
@@ -56,13 +56,13 @@ class custom_dataset(Dataset):
                 
         
     def __getitem__(self, index):
-        image_name = self.image_list[index][0]
+        image_name = self.image_list[index]
         label = self.label_list[index]
         
         
         image = Image.open(image_name)
-        if(self.transformsBasic):
-            image = self.transformsBasic(image)
+        if(self.transforms):
+            image = self.transforms(image)
         label = torch.tensor(label)
         
         return image, label
