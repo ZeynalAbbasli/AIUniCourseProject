@@ -40,6 +40,7 @@ def val(model, data_val, loss_function, writer, epoch, device):
             image, label = batch
             image = image.to(device)
             label = label.to(device)
+            label = torch.argmax(label, dim=1)
             pred = model(image)
 
 
@@ -50,7 +51,7 @@ def val(model, data_val, loss_function, writer, epoch, device):
             pred = pred.softmax(dim=1)
 
             f1_list.extend(torch.argmax(pred, dim =1).tolist())
-            f1t_list.extend(torch.argmax(label, dim =1).tolist())
+            f1t_list.extend(label.tolist())
 
             total_loss += loss.item()
             tq.update(1)
@@ -85,7 +86,7 @@ def train(model, train_loader, val_loader, optimizer, loss_fn, n_epochs, device)
         for i, (images, labels) in enumerate(train_loader):
             images = images.to(device)  # Move the batch of images to the specified device
             labels = labels.to(device)  # Move the batch of labels to the specified device
-
+            labels = torch.argmax(labels, dim = 1)
             optimizer.zero_grad()  # Reset the gradients of the optimizer
 
             # Forward pass
